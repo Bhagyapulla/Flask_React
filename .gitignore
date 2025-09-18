@@ -23,8 +23,8 @@ __pycache__/
 *.sqlite3
 
 # ---- Environment files ----
-.env
-.env.*
+
+# .env.*
 
 # ---- Editor settings ----
 .vscode/*
