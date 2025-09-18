@@ -1,0 +1,17 @@
+services:
+  - type: web
+    name: flask-backend
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn backend.app:app
+    repo: https://github.com/Bhagyapulla/my-app
+    branch: main
+
+  - type: static
+    name: react-frontend
+    buildCommand: |
+      npm install
+      npm run build
+    staticPublishPath: dist
+    repo: https://github.com/Bhagyapulla/my-app
+    branch: main

@@ -1,0 +1,3 @@
+_OPEN "uploads/DGM.dxf"
+_SAVEAS "DWG" "converted/DGM.dwg"
+QUIT
