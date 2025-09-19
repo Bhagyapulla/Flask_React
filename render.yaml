@@ -24,7 +24,7 @@ services:
       cd frontend
       npm install
       npm run build
-    staticPublishPath: frontend/build
+    staticPublishPath:  build
     plan: free
     region: oregon
     envVars:
