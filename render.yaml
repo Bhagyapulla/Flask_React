@@ -7,9 +7,8 @@ services:
     plan: free
     region: oregon
 
-  - type: web
+  - type: static_site
     name: react-frontend
-    env: static
     buildCommand: |
       npm install
       npm run build
@@ -17,4 +16,3 @@ services:
     repo: https://github.com/Bhagyapulla/my-app
     branch: main
     plan: free
-    region: oregon
