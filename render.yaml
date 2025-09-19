@@ -1,0 +1,19 @@
+services:
+  - type: web
+    name: flask-backend
+    env: docker
+    repo: https://github.com/Bhagyapulla/my-app
+    branch: main
+    plan: free
+    region: oregon
+
+  - type: static
+    name: react-frontend
+    buildCommand: |
+      npm install
+      npm run build
+    staticPublishPath: dist
+    repo: https://github.com/Bhagyapulla/my-app
+    branch: main
+    plan: free
+    region: oregon
