@@ -9,6 +9,7 @@ function App() {
   const [format, setFormat] = useState("svg");
   const [loading, setLoading] = useState(false);
 
+  // Use backend URL from env if available, else fallback to local Flask
   const API_URL = process.env.REACT_APP_API_URL || "http://127.0.0.1:5000";
 
   const handleImageUpload = (event) => {
@@ -40,12 +41,15 @@ function App() {
         headers: { "Content-Type": "multipart/form-data" },
       });
 
-      alert("Conversion Successful! Download your file below.");
+      alert("✅ Conversion Successful! Download your file below.");
+      // Store filename directly
       setConvertedFile(response.data.vector_file);
     } catch (error) {
       console.error("Error converting image:", error);
       alert(
-        `Conversion failed! ${error.response?.data?.message || "Check console for details."}`
+        `Conversion failed! ${
+          error.response?.data?.error || "Check console for details."
+        }`
       );
     } finally {
       setLoading(false);
@@ -55,7 +59,11 @@ function App() {
   return (
     <div className="container fade-in">
       <div className="header slide-down">
-        <img src={collegeLogo} alt="Shrignanabbica college Logo" className="college-logo rotate-in" />
+        <img
+          src={collegeLogo}
+          alt="Shrignanambica College Logo"
+          className="college-logo rotate-in"
+        />
         <h1 className="title scale-in">Image File Conversion</h1>
         <p className="subtitle zoom-in">
           <strong>Convert, optimize, and enhance your images effortlessly!</strong>
@@ -111,7 +119,7 @@ function App() {
             download
             className="download-btn shine"
           >
-            Download Converted File
+            ⬇️ Download Converted File
           </a>
         )}
       </div>
