@@ -6,13 +6,3 @@ services:
     branch: main
     plan: free
     region: oregon
-
-  - type: static_site
-    name: react-frontend
-    buildCommand: |
-      npm install
-      npm run build
-    staticPublishPath: build
-    repo: https://github.com/Bhagyapulla/my-app
-    branch: main
-    plan: free
