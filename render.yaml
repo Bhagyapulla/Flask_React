@@ -6,3 +6,4 @@ services:
     branch: main
     plan: free
     region: oregon
+    dockerfilePath: backend/Dockerfile
