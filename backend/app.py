@@ -3,7 +3,6 @@ from flask_cors import CORS
 import os
 import subprocess
 from PIL import Image
-import shutil
 
 app = Flask(__name__)
 CORS(app)
@@ -13,6 +12,9 @@ VECTOR_FOLDER = "vectors"
 
 os.makedirs(UPLOAD_FOLDER, exist_ok=True)
 os.makedirs(VECTOR_FOLDER, exist_ok=True)
+
+# Full path to Potrace executable
+POTRACE_PATH = r"C:\Program Files\potrace\potrace.exe"
 
 @app.route("/", methods=["GET"])
 def home():
@@ -25,34 +27,31 @@ def convert_image():
 
     file = request.files["file"]
     filename = os.path.splitext(file.filename)[0] or "uploaded"
-    file_path = os.path.join(UPLOAD_FOLDER, filename + ".bmp")
+    bmp_path = os.path.join(UPLOAD_FOLDER, filename + ".bmp")
 
-    # Step 1: Convert image to BMP
+    # Step 1: Convert uploaded image to 1-bit BMP (black-and-white)
     try:
         img = Image.open(file)
-        img = img.convert("L")  # grayscale
-        img.save(file_path)
+        img = img.convert("1")  # 1-bit black and white
+        img.save(bmp_path)
     except Exception as e:
         return jsonify({"error": f"Image processing error: {str(e)}"}), 500
 
-    # Step 2: Check Potrace availability
-    potrace_path = shutil.which("potrace")
-    if not potrace_path:
-        return jsonify({"error": "Potrace not found. Please install or add to PATH."}), 500
+    # Step 2: Check if Potrace exists
+    if not os.path.exists(POTRACE_PATH):
+        return jsonify({"error": f"Potrace executable not found at {POTRACE_PATH}"}), 500
 
-    # Step 3: Run Potrace
-    vector_file = os.path.join(VECTOR_FOLDER, filename + ".svg")
+    # Step 3: Run Potrace to generate SVG
+    svg_path = os.path.join(VECTOR_FOLDER, filename + ".svg")
     try:
-        result = subprocess.run(
-            [potrace_path, "-s", "-o", vector_file, file_path],
+        subprocess.run(
+            [POTRACE_PATH, "-s", "-o", svg_path, bmp_path],
             capture_output=True,
             text=True,
             check=True
         )
     except subprocess.CalledProcessError as e:
         return jsonify({"error": f"Potrace error: {e.stderr}"}), 500
-    except FileNotFoundError:
-        return jsonify({"error": f"Potrace executable not found at {potrace_path}"}), 500
 
     return jsonify({"vector_file": filename + ".svg"}), 200
 
